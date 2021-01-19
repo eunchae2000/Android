@@ -3,6 +3,7 @@
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -13,65 +14,38 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.material.navigation.NavigationView;
+
 import java.util.ArrayList;
 import java.util.List;
 
     public class MainActivity extends AppCompatActivity {
 
-    EditText et_id;
-    Button btn_test;
-    ImageView img_test;
+        EditText et_save;
+        String shared = "file";
 
-    private Button btn_move;
-    private EditText et_test;
-    private String str;
-    private ListView list;
+        // 값을 불러오는 부분
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+            et_save = (EditText)findViewById(R.id.et_save);
 
-        list = (ListView)findViewById(R.id.list);
-        List <String> data = new ArrayList<>();
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, data);
-        list.setAdapter(adapter);
+            SharedPreferences sharedPreferences = getSharedPreferences(shared, 0);
+            String value = sharedPreferences.getString("coco", "");
+            et_save.setText(value);
+        }
 
-        data.add("coco");
-        data.add("popo");
-        data.add("nono");
-        adapter.notifyDataSetChanged();
+        // 불러온 값을 저장하는 부분
+        @Override
+        protected void onDestroy(){
+        super.onDestroy();
 
-        et_id = findViewById(R.id.et_id);
-        btn_test = findViewById(R.id.btn_test);
-//        btn_move = (Button)findViewById(R.id.btn_move);
-//        et_test = (EditText)findViewById(R.id.et_test);
-        img_test = (ImageView)findViewById(R.id.img_test);
-
-
-        btn_move.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                str = et_test.getText().toString();
-                Intent intent = new Intent(MainActivity.this, SubActivity.class);
-                intent.putExtra("str", str);
-                startActivity(intent);  // 액티비티 이동
-            }
-        });
-
-        btn_test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                et_id.setText("coco");
-            }
-        });
-
-        img_test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"채채랑 태태", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        SharedPreferences sharedPreferences = getSharedPreferences(shared, 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String value = et_save.getText().toString();
+        editor.putString("coco", value);
+        editor.commit();
     }
 }

@@ -5,6 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -28,13 +30,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.google.android.material.navigation.NavigationView;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,113 +45,35 @@ import java.util.SimpleTimeZone;
 
     public class MainActivity extends AppCompatActivity {
 
-        private static final int REQUEST_IMAGE_CAPTURE = 672;
-        private String imageFilePath;
-        private Uri photoUri;
+        private ArrayList<MainData> arrayList;
+        private MainAdapter mainAdapter;
+        private RecyclerView recyclerView;
+        private LinearLayoutManager linearLayoutManager;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
 
-            // 권한 체크
-            TedPermission.with(getApplicationContext())
-                    .setPermissionListener(permissionListener)
-                    .setRationaleMessage("카메라 권한이 필요합니다.")
-                    .setDeniedMessage("거부하셨습니다.")
-                    .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
-                    .check();
 
-            // 촬영 버튼을 클릭하면 실행되는 action
-            findViewById(R.id.btn_capture).setOnClickListener(new View.OnClickListener() {
+            recyclerView = (RecyclerView)findViewById(R.id.rv);
+            linearLayoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(linearLayoutManager);
+
+            arrayList = new ArrayList<>();
+
+            mainAdapter = new MainAdapter(arrayList);
+            recyclerView.setAdapter(mainAdapter);
+
+            Button btn_add = (Button)findViewById(R.id.btn_add);
+            btn_add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    if(intent.resolveActivity(getPackageManager())!= null){
-                        File photoFile = null;
-                        try {
-                            photoFile = createImageFile();
-                        }catch (IOException e){
-
-                        }
-                        if(photoFile != null){
-                            photoUri = FileProvider.getUriForFile(getApplicationContext(), getPackageName(), photoFile);
-                            intent.putExtra(MediaStore. EXTRA_OUTPUT, photoUri);
-                            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-                        }
-                    }
+                    MainData mainData = new MainData(R.mipmap.ic_launcher, "coco", "Recycler View");
+                    arrayList.add(mainData);
+                    mainAdapter.notifyDataSetChanged();
                 }
             });
 
-        }
-
-        // 이미지 파일에 (연, 월, 일, 시간, 분, 초) 단위로 파일을 생성해서 이름이 중복되지 않게 하는 것
-        private File createImageFile() throws IOException {
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            String imageFileName = "TEST_"+ timeStamp + "_";
-            File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-            File image = File.createTempFile(
-                    imageFileName,
-                    ".jpg",
-                    storageDir
-            );
-            imageFilePath = image.getAbsolutePath();
-            return image;
-        }
-
-        @SuppressLint("MissingSuperCall")
-        @Override
-        protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-            if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-                Bitmap bitmap = BitmapFactory.decodeFile(imageFilePath);
-                ExifInterface exif = null;
-
-                try {
-                    exif = new ExifInterface(imageFilePath);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                int exifOrientaion;
-                int exifDegree;
-
-                if (exif != null) {
-                    exifOrientaion = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-                    exifDegree = exifOrientaionTodegress(exifOrientaion);
-                }else{
-                    exifDegree = 0;
-                }
-                ((ImageView)findViewById(R.id.iv_result)).setImageBitmap(rotate(bitmap,exifDegree));
-            }
-        }
-
-        // 이미지 회전에 대한 구문
-        private int exifOrientaionTodegress(int exifOrientation){
-            if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90){
-                return 90;
-            }else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180){
-                return 180;
-            }else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270){
-                return 270;
-            }
-            return 0;
-        }
-
-        private Bitmap rotate(Bitmap bitmap, float degree){
-            Matrix matrix = new Matrix();
-            matrix.postRotate(degree);
-            return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-        }
-
-        PermissionListener permissionListener = new PermissionListener() {
-            @Override
-            public void onPermissionGranted() {
-                Toast.makeText(getApplicationContext(), "권한이 허용됨", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-                Toast.makeText(getApplicationContext(), "권한이 거부됨", Toast.LENGTH_SHORT).show();
-            }
         };
     }

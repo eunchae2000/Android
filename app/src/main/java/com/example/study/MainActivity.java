@@ -5,6 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,35 +47,60 @@ import java.util.SimpleTimeZone;
 
     public class MainActivity extends AppCompatActivity {
 
-        private ArrayList<MainData> arrayList;
-        private MainAdapter mainAdapter;
-        private RecyclerView recyclerView;
-        private LinearLayoutManager linearLayoutManager;
+        Button btn1, btn2, btn3, btn4;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
+            btn1 = (Button)findViewById(R.id.btn1);
+            btn2 = (Button)findViewById(R.id.btn2);
+            btn3 = (Button)findViewById(R.id.btn3);
+            btn4 = (Button)findViewById(R.id.btn4);
 
-
-            recyclerView = (RecyclerView)findViewById(R.id.rv);
-            linearLayoutManager = new LinearLayoutManager(this);
-            recyclerView.setLayoutManager(linearLayoutManager);
-
-            arrayList = new ArrayList<>();
-
-            mainAdapter = new MainAdapter(arrayList);
-            recyclerView.setAdapter(mainAdapter);
-
-            Button btn_add = (Button)findViewById(R.id.btn_add);
-            btn_add.setOnClickListener(new View.OnClickListener() {
+            btn1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MainData mainData = new MainData(R.mipmap.ic_launcher, "coco", "Recycler View");
-                    arrayList.add(mainData);
-                    mainAdapter.notifyDataSetChanged();
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    Fragment1 fragment1 = new Fragment1();
+                    transaction.replace(R.id.fram, fragment1);
+                    transaction.addToBackStack(null);
+                    transaction.commit();       // 새로고침과 같은 기능
                 }
             });
 
-        };
+            btn2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    Fragment2 fragment2 = new Fragment2();
+                    transaction.replace(R.id.fram, fragment2);
+                    transaction.addToBackStack(null);
+                    transaction.commit();       // 새로고침과 같은 기능
+                }
+            });
+
+            btn3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    Fragment3 fragment3 = new Fragment3();
+                    transaction.replace(R.id.fram, fragment3);
+                    transaction.addToBackStack(null);
+                    transaction.commit();       // 새로고침과 같은 기능
+                }
+            });
+
+            btn4.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    Fragment4 fragment4 = new Fragment4();
+                    transaction.replace(R.id.fram, fragment4);
+                    transaction.addToBackStack(null);
+                    transaction.commit();       // 새로고침과 같은 기능
+                }
+            });
+
+        }
     }

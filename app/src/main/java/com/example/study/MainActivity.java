@@ -1,72 +1,65 @@
     package com.example.study;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+    import android.os.Bundle;
+    import android.os.Handler;
+    import android.os.Message;
+    import android.view.View;
+    import android.widget.Button;
+    import android.widget.Toast;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.SimpleTimeZone;
+    import androidx.annotation.NonNull;
+    import androidx.appcompat.app.AppCompatActivity;
 
     public class MainActivity extends AppCompatActivity {
+
+        Button btn_start, btn_stop;
+        Thread thread;
+        boolean isThread = false;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
 
-            String hong = "Android Studio";
 
-            Log.e("MainActivity: ", hong);
+            // 스레드 시작
+            btn_start = (Button)findViewById(R.id.btn_start);
+            btn_start.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-            // 한 줄 주석
+                    isThread = true;
+                    thread = new Thread() {
+                        public void run() {
+                            while(isThread) {
+                                try {
+                                    sleep(5000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                handler.sendEmptyMessage(0);
+                            }
+                        }
+                    };
+                    thread.start();
 
-            /*
-            여러 줄 주석
-             */
+                }
+            });
 
-            int a = 10;
+            // 스레드 종료
+            btn_stop = (Button)findViewById(R.id.btn_stop);
+            btn_stop.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    isThread = false;
+                }
+            });
 
-
-            // 로그를 찍었다.
-            Log.e("MainActivity", String.valueOf(a));
         }
+
+        private Handler handler = new Handler(){
+            public void handlerMessage(Message msg){
+                Toast.makeText(getApplicationContext(), "Android", Toast.LENGTH_SHORT).show();
+            }
+        };
     }

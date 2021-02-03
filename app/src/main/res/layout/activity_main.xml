@@ -7,14 +7,6 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    /*
-    View, ViewGroup, Layout에 포함되는 레이아웃
-    LinearLayout, TableLayout, RelativeLayout, FramLayout, GridLayout
-    */
-
-
-
-
 
 
 

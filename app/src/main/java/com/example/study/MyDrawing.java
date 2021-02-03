@@ -14,6 +14,22 @@ public class MyDrawing extends View {
         super(context);
     }
 
+    /*
+    onDraw() 함수
+    View 클래스에서 상속받아 onDraw 콜백 메소드를 정의, 화면을 다시 그릴 필요가 있을 때 자동적으로 호출
+    이 안에 그림을 그리는 Canvas 클래스와 Paint 클래스를 사용
+    */
+
+    /*
+    Canvas 클래스
+    그림을 그리는 캔버스에 해당되는 Bitmap 객체를 가짐
+     */
+
+    /*
+    Paint 클래스
+    색상, 선 스타일, 채우기 스타일, 폰트, 앤티엘리어싱 여부 들의 그리기 속성을 가진 클래스
+    Canvas 메소드에서 Paint 객체를 마지막 매개 변수로 호출하는 특징을 가짐
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);

@@ -9,6 +9,6 @@ public class BootCompleteReciver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Toast.makeText(context, "부팅 완료", Toast.LENGTH_SHORT)
+        Toast.makeText(context, "부팅 완료", Toast.LENGTH_SHORT);
     }
 }

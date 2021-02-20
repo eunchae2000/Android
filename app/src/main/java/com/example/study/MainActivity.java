@@ -7,56 +7,40 @@
     import android.os.Bundle;
     import android.view.View;
     import android.widget.Button;
+    import android.widget.Toast;
 
 
     public class MainActivity extends AppCompatActivity {
+
+        /*
+        종료 버튼 실행 = onBackPressed
+         */
         
-        Button btn_play;
-        Button btn_stop;
+        private long backbtnTime = 0;
 
-        MediaPlayer mediaPlayer;
-
-        // 액티비티가 종료될 때 이곳을 실행
-        @Override
-        protected void onDestroy() {
-            super.onDestroy();
-            if (mediaPlayer != null){
-                mediaPlayer.release();  // release = 해제
-                // release는 MediaPlayer 호출시 사용을 권장
-                mediaPlayer = null;
-            }
-        }
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
-
-            btn_play = findViewById(R.id.btn_play);
-            btn_stop = findViewById(R.id.btn_stop);
-
-            // 재생 버튼을 눌렸을 때
-            btn_play.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.song1);
-                    mediaPlayer.start();
-                }
-            });
-            
-            // 정지 버튼을 눌렸을 때
-            btn_stop.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // isPlaying은 지금 재생중인지 확인하는 것
-                    if(mediaPlayer.isPlaying()){
-                        mediaPlayer.stop();
-                        mediaPlayer.reset();
-                    }
-                }
-            });
-
-
         }
 
+        // 뒤로가기 버튼 처리
+        @Override
+        public void onBackPressed() {
+            long curTime = System.currentTimeMillis();
+            long gapTime = curTime - backbtnTime;
+
+            // 뒤로가기 버튼을 2초안에 두 번이상 누르면 종료 (첫 번째와 두 번째 버튼을 2초안에 누르면 종료됨)
+            if(0<= gapTime && 2000>=gapTime){
+                super.onBackPressed();
+            }
+
+            // 뒤로가기 버튼을 한 번 누르고 2초 안에 한번 더 누르지 않으면 Toast 메세지 출력
+            else{
+                backbtnTime = curTime;
+                Toast.makeText(this, "한번 더 누르면 종료 됩니다.", Toast.LENGTH_SHORT).show();
+            }
+
+        }
     }

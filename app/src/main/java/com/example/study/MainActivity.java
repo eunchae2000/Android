@@ -1,46 +1,46 @@
     package com.example.study;
 
     import androidx.appcompat.app.AppCompatActivity;
+    import androidx.fragment.app.Fragment;
 
-
-    import android.media.MediaPlayer;
+    import android.app.FragmentManager;
     import android.os.Bundle;
-    import android.view.View;
-    import android.widget.Button;
-    import android.widget.Toast;
+
+    import com.google.android.gms.maps.CameraUpdateFactory;
+    import com.google.android.gms.maps.GoogleMap;
+    import com.google.android.gms.maps.MapFragment;
+    import com.google.android.gms.maps.OnMapReadyCallback;
+    import com.google.android.gms.maps.model.LatLng;
+    import com.google.android.gms.maps.model.MarkerOptions;
 
 
     public class MainActivity extends AppCompatActivity {
 
-        /*
-        종료 버튼 실행 = onBackPressed
-         */
-        
-        private long backbtnTime = 0;
+        private FragmentManager fragmentManager;
+        private MapFragment mapFragment;
 
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
+
+            fragmentManager = getFragmentManager();
+            mapFragment = (MapFragment) fragmentManager.findFragmentById(R.id.google_map);
+            mapFragment.getMapAsync(this);
         }
 
-        // 뒤로가기 버튼 처리
         @Override
-        public void onBackPressed() {
-            long curTime = System.currentTimeMillis();
-            long gapTime = curTime - backbtnTime;
+        public void onMapReady(GoogleMap googleMap) {
+            LatLng location = new LatLng(37.485284, 126.901451); // 구로디지털단지역 위치
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.title("구로디지털단지역");
+            markerOptions.snippet("전철역");
+            markerOptions.position(location);
+            googleMap.addMarker(markerOptions);
 
-            // 뒤로가기 버튼을 2초안에 두 번이상 누르면 종료 (첫 번째와 두 번째 버튼을 2초안에 누르면 종료됨)
-            if(0<= gapTime && 2000>=gapTime){
-                super.onBackPressed();
-            }
-
-            // 뒤로가기 버튼을 한 번 누르고 2초 안에 한번 더 누르지 않으면 Toast 메세지 출력
-            else{
-                backbtnTime = curTime;
-                Toast.makeText(this, "한번 더 누르면 종료 됩니다.", Toast.LENGTH_SHORT).show();
-            }
+//        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 16));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16));
 
         }
     }

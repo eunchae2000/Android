@@ -13,6 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Study">
+
         <service android:name=".MusicService"
             android:enabled="true"
             android:exported="true"></service>
@@ -34,6 +35,10 @@
                 android:resource="@xml/file_paths">
             </meta-data>
         </provider>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="본인의 Google Map API 키를 이곳에 복붙해주세요"/>
 
     </application>
 

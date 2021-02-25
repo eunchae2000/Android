@@ -6,24 +6,10 @@
     import android.widget.VideoView;
 
 
-    public class MainActivity extends AppCompatActivity {
-
-        private VideoView videoView;    // 비디오를 재생할 수 있게 도와주는
-        private MediaController mediaController;    // 재생이나 정지와 같은 미디어 제어 버튼 부분을 담당
-        private String videoURL = "https://www.radiantmediaplayer.com/media/bbb-360p.mp4";
+    public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {    // 앱이 첫 실행되었을 때 이곳을 수행
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
-
-            videoView = findViewById(R.id.videoView);   // 비디오와 뷰 아이디 연결
-            mediaController = new MediaController(this);
-            mediaController.setAnchorView(videoView);
-            Uri uri = Uri.parse(videoURL);
-            videoView.setMediaController(mediaController);  // 미디어 제어 버튼부분을 세팅
-            videoView.setVideoURI(uri); // 비디오 뷰의 주소를 설정
-            videoView.start();  // 비디오 실행!
-
-        }
     }

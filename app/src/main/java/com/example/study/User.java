@@ -8,6 +8,7 @@ public class User {
 
     public User(){}
 
+
     public String getProfile() {
         return profile;
     }
@@ -15,6 +16,8 @@ public class User {
     public void setProfile(String profile) {
         this.profile = profile;
     }
+
+
 
     public String getId() {
         return id;
@@ -24,6 +27,8 @@ public class User {
         this.id = id;
     }
 
+
+
     public int getPw() {
         return pw;
     }
@@ -31,6 +36,8 @@ public class User {
     public void setPw(int pw) {
         this.pw = pw;
     }
+
+
 
     public String getUserName() {
         return userName;

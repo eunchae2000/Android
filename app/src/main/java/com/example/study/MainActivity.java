@@ -1,71 +1,39 @@
     package com.example.study;
 
-    import androidx.annotation.NonNull;
     import androidx.appcompat.app.AppCompatActivity;
-    import androidx.recyclerview.widget.LinearLayoutManager;
-    import androidx.recyclerview.widget.RecyclerView;
+    import androidx.fragment.app.FragmentPagerAdapter;
+    import androidx.viewpager.widget.ViewPager;
 
     import android.os.Bundle;
-    import android.util.Log;
 
-    import com.google.firebase.database.DataSnapshot;
-    import com.google.firebase.database.DatabaseError;
-    import com.google.firebase.database.DatabaseReference;
-    import com.google.firebase.database.FirebaseDatabase;
-    import com.google.firebase.database.ValueEventListener;
-
-    import java.util.ArrayList;
+    import com.google.android.material.tabs.TabLayout;
 
     public class MainActivity extends AppCompatActivity {
 
-        private RecyclerView recyclerView;
-        private RecyclerView.Adapter adapter;
-        private RecyclerView.LayoutManager layoutManager;
-        private ArrayList<User> arrayList;
-        private FirebaseDatabase database;
-        private DatabaseReference databaseReference;
+        // FragmentPagerAdapter => Fragment Manager 에서 관리하는 Fragment 를 나타내주는 것
+        /*
+        FragmentPagerAdapter => 제한된 페이지 개수들의 항목들에 적합 (fragment의 개수가 정해져있고 그 수가 많지 않을 때 사용)
+        FragmentStatePagerAdapter => 페이지 수를 알 수 없거나 페이지의 수가 많을 때 적합
+         */
+        private FragmentPagerAdapter fragmentPagerAdapter;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
 
-            recyclerView = findViewById(R.id.recyclerview);     // recyclerView 아이디 연결
-            recyclerView.setHasFixedSize(true);     // setHasFixedSize Ture는 recyclerView의 크키가 변경되지 않게 하는것 => 크기 일정
-            layoutManager = new LinearLayoutManager(this);      // LinearLayoutManager => 수평(Horizontal) 또는 수직(Vertical) 방향, 일렬(Linear)로 아이템 뷰 배치
-            recyclerView.setLayoutManager(layoutManager);       // LinearLayoutManager 지정해준 것을 recyclerView에 적용
-            arrayList = new ArrayList<>();      // ArrayList 선언
+            // 뷰페이저 세팅
+            // getSupportFragmentManager => 메인 액티비티에 새로 추가할 메소드로 프래그먼트 매니저를 이용해 프래그먼트를 전환하는 메소드
+            ViewPager viewPager = findViewById(R.id.viewPager);
+            fragmentPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-            database = FirebaseDatabase.getInstance();      // getInstance()는 특정 메소를 통해서 인스턴스를 생성하는 방식 => 보통은 싱글톤(singleton) 패턴을 적용한 경우
-            // 기본적인 싱글톤(singleton)의 방식은 이 싱글톤의 인스턴스가 필요할 때 getInstance가 호출되어 인스턴스를 생성 후 반환하는 방식
+            // setAdapter => viewPaper에 fragmentPaperAdapter를 적용하는 것
+            // setupWithViewPager => tabLayout과 viewPager은 연동시키는 것
+           TabLayout tabLayout = findViewById(R.id.tab_layout);
+            viewPager.setAdapter(fragmentPagerAdapter);
+            tabLayout.setupWithViewPager(viewPager);
 
-            databaseReference = database.getReference("User");      // databaseReference 를 매개체 삼아 저장하고 읽어오는 방식 => 현재 데이터베이스에 접근
-            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                /*
-                - databaseReference.addListenerForSingleValueEvent(new ValueEventListener()
-                한 번만 호출되고 즉시 삭제되는 콜백이 필요한 경우에 사용.
-                한 번 로드된 후 자주 변경되지 않거나 능동적으로 수신 대기할 필요가 없는 데이터에 유용
-                이 메소드는 한번 호출된 후 다시 호출되지 않는다.
-                 */
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    arrayList.clear();
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                        // getValue는 snapshot이 가리키고 있는 데이터를 자바 객체 형태로 반환
-                        User user = snapshot.getValue(User.class);
-                        arrayList.add(user);
-                    }
-                    adapter.notifyDataSetChanged();     // notifyDataSetChanged => adapter에 리스트가 바뀌었다는 걸 알림
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Log.e("MainActivity", String.valueOf(databaseError.toException()));
-
-                }
-            });
-            adapter = new CustomAdapter(arrayList, this);
-            recyclerView.setAdapter(adapter);
 
         }
     }

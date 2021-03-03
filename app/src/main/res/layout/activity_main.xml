@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.constraintlayout.widget.Constraints
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,41 +7,55 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!-- RadioGroup을 이용해서 RadioButton 여러개를 만들고 그룹을 묶기 -->
+    <TextView
+        android:id="@+id/tv_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="결과 텍스트"
+        android:textSize="36sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_result" />
 
-    <RadioGroup
-        android:id="@+id/rg_gender"
+    <CheckBox
+        android:id="@+id/chk_red"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:text="빨강"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <RadioButton
-            android:id="@+id/rb_women"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="여자"/>
+    <CheckBox
+        android:id="@+id/chk_blue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="파랑"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chk_red" />
 
-        <RadioButton
-            android:id="@+id/rb_man"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="남자"/>
-    </RadioGroup>
-    
+    <CheckBox
+        android:id="@+id/chk_green"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="초록"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chk_blue" />
+
     <Button
         android:id="@+id/btn_result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text=""
+        android:text="선택 완료"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rg_gender">
-    </Button>
+        app:layout_constraintTop_toBottomOf="@+id/chk_green" />
 
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.Constraints>
